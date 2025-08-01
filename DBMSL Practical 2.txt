@@ -1,0 +1,288 @@
+Microsoft Windows [Version 10.0.19045.6093]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 9.3\bin>mysql -h localhost -u root -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 9.3.0 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2025, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| abc                |
+| bank               |
+| bank1              |
+| bank11             |
+| bank2              |
+| bank3              |
+| company            |
+| demo               |
+| deva1              |
+| ecommerce          |
+| ecommerence        |
+| ecommerence2       |
+| information_schema |
+| inventory          |
+| mysql              |
+| new                |
+| performance_schema |
+| product            |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+21 rows in set (0.012 sec)
+
+mysql> use product;
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_product |
++-------------------+
+| customer          |
+| product           |
++-------------------+
+2 rows in set (0.176 sec)
+
+mysql> desc product;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| pid      | int         | NO   | PRI | NULL    |       |
+| pname    | varchar(30) | YES  |     | NULL    |       |
+| price    | float       | YES  |     | NULL    |       |
+| discount | float       | YES  |     | NULL    |       |
+| mf       | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.092 sec)
+
+mysql> drop table product;
+Query OK, 0 rows affected (0.210 sec)
+
+mysql> create table product(pid int,pname varchar(20),price float,discount float,profit float);
+Query OK, 0 rows affected (0.208 sec)
+
+mysql> create view v1 as select pid,pname,price from product;
+Query OK, 0 rows affected (0.129 sec)
+
+mysql> insert into v1 values(101,pen,100)
+    -> insert into v1 values(102,book,500);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into v1 values(102,book,500)' at line 2
+mysql> insert into v1 values(101, 'pen' ,100)
+    -> insert into v1 values(102, 'book' , 500);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'insert into v1 values(102, 'book' , 500)' at line 2
+mysql> insert into v1 values(101,'pen',100)
+    -> ;insert into v1 values(102,'book',500);
+Query OK, 1 row affected (0.126 sec)
+
+Query OK, 1 row affected (0.024 sec)
+
+mysql> desc v1;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| pid   | int         | YES  |     | NULL    |       |
+| pname | varchar(20) | YES  |     | NULL    |       |
+| price | float       | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.011 sec)
+
+mysql> slelct * from v1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'slelct * from v1' at line 1
+mysql> select *from v1
+    -> /^C
+mysql> select * from v1;
++------+-------+-------+
+| pid  | pname | price |
++------+-------+-------+
+|  101 | pen   |   100 |
+|  102 | book  |   500 |
++------+-------+-------+
+2 rows in set (0.061 sec)
+
+mysql> delete from v1
+    -> where pid=102;
+Query OK, 1 row affected (0.092 sec)
+
+mysql> update v1
+    -> set price=50
+    -> where pid=101;
+Query OK, 1 row affected (0.095 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from v1;
++------+-------+-------+
+| pid  | pname | price |
++------+-------+-------+
+|  101 | pen   |    50 |
++------+-------+-------+
+1 row in set (0.004 sec)
+
+mysql> show tabels;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tabels' at line 1
+mysql> show tables;
++-------------------+
+| Tables_in_product |
++-------------------+
+| customer          |
+| product           |
+| v1                |
++-------------------+
+3 rows in set (0.011 sec)
+
+mysql> create table purchase (poid int primary key, cid int, pid int, qty int, pdate date);
+Query OK, 0 rows affected (0.229 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_product |
++-------------------+
+| customer          |
+| product           |
+| purchase          |
+| v1                |
++-------------------+
+4 rows in set (0.010 sec)
+
+mysql> desc customer;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| cid       | int         | NO   | PRI | NULL    |       |
+| cname     | varchar(20) | YES  |     | NULL    |       |
+| address   | varchar(30) | YES  |     | NULL    |       |
+| contactNo | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.016 sec)
+
+mysql> desc product;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| pid      | int         | YES  |     | NULL    |       |
+| pname    | varchar(20) | YES  |     | NULL    |       |
+| price    | float       | YES  |     | NULL    |       |
+| discount | float       | YES  |     | NULL    |       |
+| profit   | float       | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.012 sec)
+
+mysql> desc purchase;
++-------+------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+------+------+-----+---------+-------+
+| poid  | int  | NO   | PRI | NULL    |       |
+| cid   | int  | YES  |     | NULL    |       |
+| pid   | int  | YES  |     | NULL    |       |
+| qty   | int  | YES  |     | NULL    |       |
+| pdate | date | YES  |     | NULL    |       |
++-------+------+------+-----+---------+-------+
+5 rows in set (0.015 sec)
+
+mysql> alter table product add primary key(cid);
+ERROR 1072 (42000): Key column 'cid' doesn't exist in table
+mysql> alter table product add primary key(pid);
+Query OK, 0 rows affected (0.780 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table customer drop primary key;
+Query OK, 0 rows affected (0.421 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table customer primary key(cid);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primary key(cid)' at line 1
+mysql> alter table add primary key(cid);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add primary key(cid)' at line 1
+mysql> alter table customer add primary key(cid);
+Query OK, 0 rows affected (0.374 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table purchase(poid int primary key,cid int,pid int,qty int,pdate date,foreign key(pid) references product(pid), foreign key(cid) references customer(cid));
+ERROR 1050 (42S01): Table 'purchase' already exists
+mysql> create table Purchase(poid int primary key,cid int,pid int,qty int,pdate date,foreign key(pid) references product(pid), foreign key(cid) references customer(cid));
+ERROR 1050 (42S01): Table 'purchase' already exists
+mysql> create view v2 as select name,pname,qty,pdate from customer,product,purchase
+    -> where customer.cid=purchase.cid and product.pid=purchase.pid;
+ERROR 1054 (42S22): Unknown column 'name' in 'field list'
+mysql> create view v2 as select cname,pname,qty,pdate from customer,product,purchase
+    -> where customer.cid=purchase.cid and product.pid=purchase.pid;
+Query OK, 0 rows affected (0.110 sec)
+
+mysql> select *from v2;
+Empty set (0.009 sec)
+
+mysql> desc v2;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| cname | varchar(20) | YES  |     | NULL    |       |
+| pname | varchar(20) | YES  |     | NULL    |       |
+| qty   | int         | YES  |     | NULL    |       |
+| pdate | date        | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+4 rows in set (0.013 sec)
+
+mysql> create index abc on product(pid);
+Query OK, 0 rows affected (0.467 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from product;
++-----+-------+-------+----------+--------+
+| pid | pname | price | discount | profit |
++-----+-------+-------+----------+--------+
+| 101 | pen   |    50 |     NULL |   NULL |
++-----+-------+-------+----------+--------+
+1 row in set (0.004 sec)
+
+mysql> show index from product;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| product |          0 | PRIMARY  |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| product |          1 | abc      |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.108 sec)
+
+mysql> create index def on product(pname,price);
+Query OK, 0 rows affected (0.267 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show index from product;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| product |          0 | PRIMARY  |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| product |          1 | abc      |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| product |          1 | def      |            1 | pname       | A         |           1 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
+| product |          1 | def      |            2 | price       | A         |           1 |     NULL |   NULL | YES  | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+4 rows in set (0.092 sec)
+
+mysql> alter product table drop index def;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'product table drop index def' at line 1
+mysql> alter product table drop index(def);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'product table drop index(def)' at line 1
+mysql> alter table product drop index def;
+Query OK, 0 rows affected (0.165 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show index from product;
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table   | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| product |          0 | PRIMARY  |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| product |          1 | abc      |            1 | pid         | A         |           1 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++---------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+2 rows in set (0.012 sec)
+
+mysql>
